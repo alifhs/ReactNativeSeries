@@ -7,8 +7,10 @@
  */
 import 'react-native-gesture-handler';
 import React, {useState} from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
+// import {createStackNavigator} from '@react-navigation/stack';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {
   RefreshControl,
   SafeAreaView,
@@ -32,7 +34,7 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
 
 const Home = ({navigation}) => {
   return (
@@ -43,7 +45,7 @@ const Home = ({navigation}) => {
         onPress={() => {
           navigation.navigate('Profile');
         }}>
-        <Text style={styles.text}>Profile</Text>
+        <Text style={styles.text}>{'Profile -->'}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -57,7 +59,7 @@ const Profile = ({navigation}) => {
         onPress={() => {
           navigation.navigate('Settings');
         }}>
-        <Text style={styles.text}>Settings</Text>
+        <Text style={styles.text}>{'Settings -->'}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -66,6 +68,13 @@ const Settings = ({navigation}) => {
   return (
     <View style={styles.body}>
       <Text>Profile</Text>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => {
+          navigation.navigate('Home');
+        }}>
+        <Text style={styles.text}>{'Home -->'}</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -73,12 +82,41 @@ const Settings = ({navigation}) => {
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Home" component={Home} />
+      <Tab.Navigator
+        screenOptions={({route}) => ({
+          appBar: false,
+          tabBarIcon: ({focused, size, color}) => {
+            let iconName;
+            if (route.name === 'Home') {
+              iconName = 'home';
+              size = focused ? 25 : 20;
+              color = focused ? 'blue' : 'gray';
+            } else if (route.name === 'Profile') {
+              iconName = 'users';
+              size = focused ? 25 : 20;
+              color = focused ? 'blue' : 'gray';
+            } else if (route.name === 'Settings') {
+              iconName = 'cog';
+              size = focused ? 25 : 20;
+              color = focused ? 'blue' : 'gray';
+            }
 
-        <Stack.Screen name="Profile" component={Profile} />
-        <Stack.Screen name="Settings" component={Settings} />
-      </Stack.Navigator>
+            return <FontAwesome5 name={iconName} size={size} color={color} />;
+          },
+          tabBarActiveTintColor: 'blue',
+          tabBarInactiveTintColor: 'gray',
+          tabBarActiveBackgroundColor: 'lime',
+          tabBarInactiveBackgroundColor: 'white',
+        })}>
+        <Tab.Screen name="Home" component={Home} />
+
+        <Tab.Screen
+          options={{headerShown: false}}
+          name="Profile"
+          component={Profile}
+        />
+        <Tab.Screen name="Settings" component={Settings} />
+      </Tab.Navigator>
     </NavigationContainer>
   );
 };
