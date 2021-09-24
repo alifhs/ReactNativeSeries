@@ -5,9 +5,10 @@
  * @format
  * @flow strict-local
  */
-
+import 'react-native-gesture-handler';
 import React, {useState} from 'react';
-
+import {createStackNavigator} from '@react-navigation/stack';
+import {NavigationContainer} from '@react-navigation/native';
 import {
   RefreshControl,
   SafeAreaView,
@@ -21,6 +22,7 @@ import {
   Button,
   TouchableOpacity,
   Alert,
+  ToastAndroid,
 } from 'react-native';
 
 import {
@@ -30,28 +32,54 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+const Stack = createStackNavigator();
 
-const App = () => {
-  const [name, setName] = useState('');
-  const onInputChange = value => {
-    setName(value);
-  };
-
+const Home = ({navigation}) => {
   return (
     <View style={styles.body}>
-      <Text>Enter you name:</Text>
-      <TextInput style={styles.input} onChangeText={onInputChange}></TextInput>
-
-      {/* <Button title="Submit" /> */}
+      <Text>Home</Text>
       <TouchableOpacity
         style={styles.button}
         onPress={() => {
-          Alert.alert('Warning', `User typed ${name}`, [{text: 'Ok'}])
+          navigation.navigate('Profile');
         }}>
-        <Text style={styles.text}>Submit</Text>
+        <Text style={styles.text}>Profile</Text>
       </TouchableOpacity>
-      <Text style={styles.inputDisplay}>{name}</Text>
     </View>
+  );
+};
+const Profile = ({navigation}) => {
+  return (
+    <View style={styles.body}>
+      <Text>Profile</Text>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => {
+          navigation.navigate('Settings');
+        }}>
+        <Text style={styles.text}>Settings</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
+const Settings = ({navigation}) => {
+  return (
+    <View style={styles.body}>
+      <Text>Profile</Text>
+    </View>
+  );
+};
+
+const App = () => {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={Home} />
+
+        <Stack.Screen name="Profile" component={Profile} />
+        <Stack.Screen name="Settings" component={Settings} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
 
@@ -60,6 +88,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     alignItems: 'center',
+    justifyContent: 'center',
   },
   input: {
     borderColor: 'gray',
